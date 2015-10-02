@@ -8,7 +8,11 @@ public class Twinge {
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-            	new GUI();
+            	GUI gui = new GUI();
+            	Downloader downloader = new Downloader();
+            	
+            	gui.addDownloader(downloader);
+            	downloader.addAssociatedGui(gui);
             }
         });
 	}
