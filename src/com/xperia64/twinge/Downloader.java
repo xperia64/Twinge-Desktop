@@ -13,12 +13,17 @@ import javax.swing.JOptionPane;
 public class Downloader {
 
 	private GUI associatedGUI;
+	private CLI associatedCLI;
 	final String regex = "^(http://).*(/v1/AUTH_system).*(m3u8)$";
 	final String apiTmplUrl = "https://api.twitch.tv/api/vods/%s/access_token";
 	final String usherTmplUrl = "http://usher.twitch.tv/vod/%s?nauthsig=%s&allow_source=true&nauth=%s";
 
-	public void addAssociatedGui(GUI associatedGUI){
+	public void addAssociatedGui(GUI associatedGUI) {
 		this.associatedGUI = associatedGUI;
+	}
+
+	public void addAssociatedCli(CLI associatedCli) {
+		this.associatedCLI = associatedCli;
 	}
 
 	public static String convertStreamToString(InputStream is) {
@@ -45,9 +50,14 @@ public class Downloader {
 							.openConnection();
 					connection.connect();
 					if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) {
-						JOptionPane
-								.showMessageDialog(associatedGUI,
-										"This doesn't look like a new twitch video system VOD URL/ID");
+						if (associatedGUI != null) {
+							JOptionPane
+									.showMessageDialog(associatedGUI,
+											"This doesn't look like a new twitch video system VOD URL/ID");
+						} else {
+							System.err
+									.println("This does not appear to be a valid twitch video system VOD URL/ID...");
+						}
 					}
 					input = connection.getInputStream();
 				} catch (IOException e) {
@@ -60,9 +70,14 @@ public class Downloader {
 						|| !((result.length() == 183 || result.length() == 184)
 								&& result.startsWith("{\"token\":\"{") && (result
 									.endsWith("\"}")))) {
-					JOptionPane
-							.showMessageDialog(associatedGUI,
-									"Bad twitch API result (Is this a valid video ID?)");
+					if (associatedGUI != null) {
+						JOptionPane
+								.showMessageDialog(associatedGUI,
+										"Bad twitch API result (Is this a valid video ID?)");
+					} else {
+						System.err
+								.println("Bad twitch API result (Is this a valid video ID?)\n");
+					}
 				}
 				System.out.println("Result: " + result);
 				String token = result.substring(10,
@@ -85,8 +100,12 @@ public class Downloader {
 					connection = (HttpURLConnection) url.openConnection();
 					connection.connect();
 					if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) {
-						JOptionPane.showMessageDialog(associatedGUI,
-								"Bad VOD connection");
+						if (associatedGUI != null) {
+							JOptionPane.showMessageDialog(associatedGUI,
+									"Bad VOD connection");
+						} else {
+							System.err.println("Bad VOD connection!\n");
+						}
 					}
 					input = connection.getInputStream();
 				} catch (IOException e) {
@@ -97,9 +116,13 @@ public class Downloader {
 				System.out.println("Result: " + resolute);
 				if (resolute == null || resolute.isEmpty()
 						|| !resolute.startsWith("#EXTM3U")) {
-					JOptionPane.showMessageDialog(associatedGUI,
-							"Bad twitch VOD result");
-					return;
+					if (associatedGUI != null) {
+						JOptionPane.showMessageDialog(associatedGUI,
+								"Bad twitch VOD result");
+						return;
+					} else {
+						System.err.println("Bad twitch VOD result!\n");
+					}
 				}
 				String[] lines = resolute.split("\n");
 				final ArrayList<String> qualities = new ArrayList<String>();
@@ -129,32 +152,51 @@ public class Downloader {
 					System.out.println(qualities.get(i));
 					uaaa[i] = qualities.get(i);
 				}
-				String choice = (String) JOptionPane.showInputDialog(null,
-						"Choose quality", "Twinge",
-						JOptionPane.QUESTION_MESSAGE, null, uaaa, null);
+				String choice;
+
+				if (associatedGUI != null) {
+					choice = (String) JOptionPane.showInputDialog(null,
+							"Choose quality", "Twinge",
+							JOptionPane.QUESTION_MESSAGE, null, uaaa, null);
+				} else{
+					choice = associatedCLI.getLine();
+				}
 				int x = -1;
 				for (int i = 0; i < qualities.size(); i++) {
-					if (qualities.get(i).equals(choice)) {
+					if (qualities.get(i).toLowerCase().trim().contains(choice.toLowerCase().trim())) {
 						x = i;
 						break;
 					}
 				}
-				
-				//This is GUI stuff
-				//TODO: Get this out!
+
+				// This is GUI stuff
+				// TODO: Get this out!
 				if (x != -1) {
-					associatedGUI.setOutputText(urls.get(x));
-					if (associatedGUI.copyToIsSelected()) {
-						associatedGUI.setClipboardContents(urls.get(x));
+					if (associatedGUI != null) {
+						associatedGUI.setOutputText(urls.get(x));
+						if (associatedGUI.copyToIsSelected()) {
+							associatedGUI.setClipboardContents(urls.get(x));
+						}
+					} else {
+						associatedCLI.setURL(urls.get(x));
 					}
 				} else {
-					associatedGUI.setOutputText("Failed");
+					if (associatedGUI != null) {
+						associatedGUI.setOutputText("Failed");
+					} else {
+						associatedCLI.setURL("Failed");
+					}
 				}
 
 			}
 		});
 
-		t.start();
+		if (associatedGUI != null) {
+			t.start();
+		} else {
+			t.run();
+		}
+
 	}
 
 }
