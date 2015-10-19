@@ -56,7 +56,7 @@ public class Downloader {
 											"This doesn't look like a new twitch video system VOD URL/ID");
 						} else {
 							System.err
-									.println("This does not appear to be a valid twitch video system VOD URL/ID...");
+									.println("[Twinge-Downloader] This does not appear to be a valid twitch video system VOD URL/ID...");
 						}
 					}
 					input = connection.getInputStream();
@@ -76,10 +76,10 @@ public class Downloader {
 										"Bad twitch API result (Is this a valid video ID?)");
 					} else {
 						System.err
-								.println("Bad twitch API result (Is this a valid video ID?)\n");
+								.println("[Twinge-Downloader] Bad twitch API result (Is this a valid video ID?)\n");
 					}
 				}
-				System.out.println("Result: " + result);
+				System.out.println("[Twinge-Downloader] Result: " + result);
 				String token = result.substring(10,
 						result.length() == 184 ? 133 : 132);
 				token = token.replace("\\", "");
@@ -104,7 +104,7 @@ public class Downloader {
 							JOptionPane.showMessageDialog(associatedGUI,
 									"Bad VOD connection");
 						} else {
-							System.err.println("Bad VOD connection!\n");
+							System.err.println("[Twinge-Downloader] Bad VOD connection!\n");
 						}
 					}
 					input = connection.getInputStream();
@@ -113,7 +113,7 @@ public class Downloader {
 				}
 
 				String resolute = convertStreamToString(input);
-				System.out.println("Result: " + resolute);
+				System.out.println("[Twinge-Downloader] Result: " + resolute.replaceAll("\n", "\n[Twinge-Downloader] ") + "\n");
 				if (resolute == null || resolute.isEmpty()
 						|| !resolute.startsWith("#EXTM3U")) {
 					if (associatedGUI != null) {
@@ -121,7 +121,7 @@ public class Downloader {
 								"Bad twitch VOD result");
 						return;
 					} else {
-						System.err.println("Bad twitch VOD result!\n");
+						System.err.println("[Twinge-Downloader] Bad twitch VOD result!\n");
 					}
 				}
 				String[] lines = resolute.split("\n");
@@ -148,8 +148,9 @@ public class Downloader {
 				if (!(qualities.size() == urls.size() && qualities.size() != 0))
 					return;
 				String[] uaaa = new String[qualities.size()];
+				System.out.println("[Twinge-Downloader] Select a quality: ");
 				for (int i = 0; i < qualities.size(); i++) {
-					System.out.println(qualities.get(i));
+					System.out.println("[Twinge-Downloader] " + qualities.get(i));
 					uaaa[i] = qualities.get(i);
 				}
 				String choice;

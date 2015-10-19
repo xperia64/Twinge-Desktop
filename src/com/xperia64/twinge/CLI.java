@@ -26,7 +26,7 @@ public class CLI implements Runnable {
 	
 	public String promptForInput(String msg){
 		
-		System.out.println(msg);
+		System.out.print(msg);
 		return getLine();
 		
 	}
@@ -47,9 +47,9 @@ public class CLI implements Runnable {
 			downloader.attemptToDownload(url);
 		} else {
 			System.out
-					.println("The entered text does not appear to be a twitch video system VOD URL/ID\n");
+					.println("[Twinge-CLI] The entered text does not appear to be a twitch video system VOD URL/ID\n");
 		}
-		System.out.println("\n\nYour url is: " + URL + "\n\n");
+		System.out.println("\n\n[Twinge-CLI] Your url is: " + URL + "\n\n");
 	}
 
 	/*
@@ -62,8 +62,19 @@ public class CLI implements Runnable {
 
 	@Override
 	public void run() {
+		
+		System.out.println("[Twinge-CLI] Welcome to the CLI for Twinge Desktop!\n\n");
+		
 		while (true) {
-			// loop
+			
+			String choice = promptForInput("[Twinge-CLI] Enter a VOD URL/ID or type \"exit\" to quit: ");
+			
+			if(choice.toLowerCase().equals("exit")){
+				break;
+			} else{
+				downloadFrom(choice);
+			}
+			
 		}
 	}
 

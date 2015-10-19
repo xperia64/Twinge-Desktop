@@ -45,7 +45,8 @@ public class Twinge {
 				return;
 			}
 			
-			
+			Thread t = new Thread(cli);
+			t.start();
 			
 		}
 	}
