@@ -8,7 +8,8 @@ package com.xperia64.twinge;
 public class FlagHelper {
 
 	Flag[] flags = {new Flag("-h",0,"Shows this help text."),
-			new Flag("-u",1,"Defines the url to grab the video playlist from. Use: \"--url something.something/location\"")};
+			new Flag("-u",1,"Defines the url to grab the video playlist from. Use: \"--url something.something/location\""),
+			new Flag("-c",0,"Opens the program in CLI mode.")};
 	
 	public String listFlags(){
 		String str = "";
