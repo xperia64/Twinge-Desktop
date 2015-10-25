@@ -67,7 +67,7 @@ public class Twinge {
 
 			if (URLs.size() > 0) {
 				
-				if(QUALITY == null){
+				if(QUALITY == null && !VERBOSE){
 					QUALITY = "Raw";
 				}
 				
