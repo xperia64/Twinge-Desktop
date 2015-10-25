@@ -15,6 +15,9 @@ public class Twinge {
 		System.out.println("\t-c                use the command line interface.");
 		System.out.println("\t-q [QUALITY]      set the quality of downloads.");
 		System.out.println("\t-v                be verbose.");
+		System.out.println("\n\nIf any URLs are passed as an argument, the program will\n" +
+				"automatically use the CLI to provide all output. If a quality\n" +
+				"is not provided, Twinge will use 'Raw' as the default.");
 	}
 
 	public static void main(String[] args) {
@@ -44,7 +47,7 @@ public class Twinge {
 			}
 		}
 
-		if (useGUI) {
+		if (useGUI && URLs.size() == 0) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					GUI gui = new GUI();
@@ -63,6 +66,11 @@ public class Twinge {
 			downloader.addAssociatedCli(cli);
 
 			if (URLs.size() > 0) {
+				
+				if(QUALITY == null){
+					QUALITY = "Raw";
+				}
+				
 				for (String url : URLs) {
 					cli.downloadFrom(url, Twinge.VERBOSE);
 				}
