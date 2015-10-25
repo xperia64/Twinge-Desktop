@@ -12,7 +12,7 @@ public class CLI implements Runnable {
 
 	private String URL;
 	private Downloader downloader;
-	
+
 	private Scanner stdin;
 
 	public CLI() {
@@ -20,17 +20,17 @@ public class CLI implements Runnable {
 		stdin = new Scanner(System.in);
 	}
 
-	public String getLine(){
+	public String getLine() {
 		return stdin.nextLine();
 	}
-	
-	public String promptForInput(String msg){
-		
+
+	public String promptForInput(String msg) {
+
 		System.out.print(msg);
 		return getLine();
-		
+
 	}
-	
+
 	public void setURL(String URL) {
 		this.URL = URL;
 	}
@@ -52,6 +52,23 @@ public class CLI implements Runnable {
 		System.out.println("\n\n[Twinge-CLI] Your url is: " + URL + "\n\n");
 	}
 
+	public void downloadFrom(String url, boolean space) {
+		if (url.toLowerCase().matches(regex1)) {
+			downloader
+					.attemptToDownload(url.substring(url.lastIndexOf('/') + 1));
+		} else if (url.matches(regex2)) {
+			downloader.attemptToDownload(url);
+		} else {
+			System.out
+					.println("[Twinge-CLI] The entered text does not appear to be a twitch video system VOD URL/ID\n");
+		}
+		if (space) {
+			System.out.println("\n\n[Twinge-CLI] Your url is: " + URL + "\n\n");
+		} else {
+			System.out.println(URL);
+		}
+	}
+
 	/*
 	 * String s = url.getText(); if (s.toLowerCase().matches(regex1))
 	 * downloader.attemptToDownload(s.substring(s.lastIndexOf('/') + 1)); else
@@ -62,19 +79,20 @@ public class CLI implements Runnable {
 
 	@Override
 	public void run() {
-		
-		System.out.println("[Twinge-CLI] Welcome to the CLI for Twinge Desktop!\n\n");
-		
+
+		System.out
+				.println("[Twinge-CLI] Welcome to the CLI for Twinge Desktop!\n\n");
+
 		while (true) {
-			
+
 			String choice = promptForInput("[Twinge-CLI] Enter a VOD URL/ID or type \"exit\" to quit: ");
-			
-			if(choice.toLowerCase().equals("exit")){
+
+			if (choice.toLowerCase().equals("exit")) {
 				break;
-			} else{
+			} else {
 				downloadFrom(choice);
 			}
-			
+
 		}
 	}
 

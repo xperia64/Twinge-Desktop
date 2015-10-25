@@ -79,7 +79,10 @@ public class Downloader {
 								.println("[Twinge-Downloader] Bad twitch API result (Is this a valid video ID?)\n");
 					}
 				}
-				System.out.println("[Twinge-Downloader] Result: " + result);
+
+				if (Twinge.VERBOSE) {
+					System.out.println("[Twinge-Downloader] Result: " + result);
+				}
 				String token = result.substring(10,
 						result.length() == 184 ? 133 : 132);
 				token = token.replace("\\", "");
@@ -90,11 +93,13 @@ public class Downloader {
 				String usherUrl = String.format(usherTmplUrl, vodId, tokenSig,
 						token);
 				url = null;
+
 				try {
 					url = new URL(usherUrl);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
+
 				HttpURLConnection connection;
 				try {
 					connection = (HttpURLConnection) url.openConnection();
@@ -104,7 +109,8 @@ public class Downloader {
 							JOptionPane.showMessageDialog(associatedGUI,
 									"Bad VOD connection");
 						} else {
-							System.err.println("[Twinge-Downloader] Bad VOD connection!\n");
+							System.err
+									.println("[Twinge-Downloader] Bad VOD connection!\n");
 						}
 					}
 					input = connection.getInputStream();
@@ -113,7 +119,11 @@ public class Downloader {
 				}
 
 				String resolute = convertStreamToString(input);
-				System.out.println("[Twinge-Downloader] Result: " + resolute.replaceAll("\n", "\n[Twinge-Downloader] ") + "\n");
+				if (Twinge.VERBOSE) {
+					System.out.println("[Twinge-Downloader] Result: "
+							+ resolute.replaceAll("\n",
+									"\n[Twinge-Downloader] ") + "\n");
+				}
 				if (resolute == null || resolute.isEmpty()
 						|| !resolute.startsWith("#EXTM3U")) {
 					if (associatedGUI != null) {
@@ -121,7 +131,8 @@ public class Downloader {
 								"Bad twitch VOD result");
 						return;
 					} else {
-						System.err.println("[Twinge-Downloader] Bad twitch VOD result!\n");
+						System.err
+								.println("[Twinge-Downloader] Bad twitch VOD result!\n");
 					}
 				}
 				String[] lines = resolute.split("\n");
@@ -145,26 +156,36 @@ public class Downloader {
 						urls.add(line);
 					}
 				}
-				if (!(qualities.size() == urls.size() && qualities.size() != 0))
+				if (!(qualities.size() == urls.size() && qualities.size() != 0)) {
 					return;
-				String[] uaaa = new String[qualities.size()];
-				System.out.println("[Twinge-Downloader] Select a quality: ");
-				for (int i = 0; i < qualities.size(); i++) {
-					System.out.println("[Twinge-Downloader] " + qualities.get(i));
-					uaaa[i] = qualities.get(i);
 				}
+
 				String choice;
 
-				if (associatedGUI != null) {
-					choice = (String) JOptionPane.showInputDialog(null,
-							"Choose quality", "Twinge",
-							JOptionPane.QUESTION_MESSAGE, null, uaaa, null);
-				} else{
-					choice = associatedCLI.getLine();
+				if (Twinge.QUALITY != null) {
+					choice = Twinge.QUALITY;
+				} else {
+					String[] uaaa = new String[qualities.size()];
+					System.out
+							.println("[Twinge-Downloader] Select a quality: ");
+					for (int i = 0; i < qualities.size(); i++) {
+						System.out.println("[Twinge-Downloader] "
+								+ qualities.get(i));
+						uaaa[i] = qualities.get(i);
+					}
+
+					if (associatedGUI != null) {
+						choice = (String) JOptionPane.showInputDialog(null,
+								"Choose quality", "Twinge",
+								JOptionPane.QUESTION_MESSAGE, null, uaaa, null);
+					} else {
+						choice = associatedCLI.getLine();
+					}
 				}
 				int x = -1;
 				for (int i = 0; i < qualities.size(); i++) {
-					if (qualities.get(i).toLowerCase().trim().contains(choice.toLowerCase().trim())) {
+					if (qualities.get(i).toLowerCase().trim()
+							.contains(choice.toLowerCase().trim())) {
 						x = i;
 						break;
 					}
