@@ -5,6 +5,9 @@ import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
+/**
+ * A class for Command Line operations. This handles basic command line logic.
+ */
 public class CLI implements Runnable {
 
 	final String regex1 = "^(http://|)([w]{3}\\.|)(twitch.tv/).*(/v/)\\d{7,8}$";
@@ -15,15 +18,30 @@ public class CLI implements Runnable {
 
 	private Scanner stdin;
 
+	/**
+	 * Standard constructor. Ensures all values are in a state that they may be used.
+	 */
 	public CLI() {
 		URL = "";
 		stdin = new Scanner(System.in);
 	}
 
+	/**
+	 * Gets the next line from the standard input stream (System.in).
+	 * 
+	 * @return One line from System.in
+	 */
 	public String getLine() {
 		return stdin.nextLine();
 	}
 
+	/**
+	 * Gets user input from the standard input stream (System.in). It prompts the user with a message first.
+	 * Note that this does not do anything fancy to user input...
+	 * 
+	 * @param msg Message to be displayed.
+	 * @return User's response.
+	 */
 	public String promptForInput(String msg) {
 
 		System.out.print(msg);
@@ -31,14 +49,30 @@ public class CLI implements Runnable {
 
 	}
 
+	/**
+	 * Sets the URL to download from.
+	 * 
+	 * @param URL URL to be downloaded from.
+	 */
 	public void setURL(String URL) {
 		this.URL = URL;
 	}
 
+	/**
+	 * Add a downloader object. The downloader object handles the logic used when downloading.
+	 * 
+	 * @param downloader Download object to be used.
+	 */
 	public void addDownloader(Downloader downloader) {
 		this.downloader = downloader;
 	}
 
+	/**
+	 * This method prompts the downloader to attempt a download. This will first confirm if the URL is valid using regex.
+	 * Spaces are added by default.
+	 * 
+	 * @param url URL to attempt downloading from.
+	 */
 	public void downloadFrom(String url) {
 		if (url.toLowerCase().matches(regex1)) {
 			downloader
@@ -52,6 +86,13 @@ public class CLI implements Runnable {
 		System.out.println("\n\n[Twinge-CLI] Your url is: " + URL + "\n\n");
 	}
 
+	/**
+	 * This method prompts the downloader to attempt a download. This will first confirm if the URL is valid using regex.
+	 * The boolean value can be used to choose if spaces are applied.
+	 * 
+	 * @param url URL to attempt downloading from.
+	 * @param space Add spaces between lines.
+	 */
 	public void downloadFrom(String url, boolean space) {
 		if (url.toLowerCase().matches(regex1)) {
 			downloader
@@ -69,14 +110,9 @@ public class CLI implements Runnable {
 		}
 	}
 
-	/*
-	 * String s = url.getText(); if (s.toLowerCase().matches(regex1))
-	 * downloader.attemptToDownload(s.substring(s.lastIndexOf('/') + 1)); else
-	 * if (s.matches(regex2)) downloader.attemptToDownload(s); else
-	 * JOptionPane.showMessageDialog
-	 * (this,"This doesn't look like a new twitch video system VOD URL/ID");
+	/**
+	 * This runs the program until the user quits.
 	 */
-
 	@Override
 	public void run() {
 
