@@ -72,7 +72,7 @@ public class Twinge {
 			Downloader downloader = new Downloader();
 
 			cli.addDownloader(downloader);
-			downloader.addAssociatedCli(cli);
+			downloader.addAssociatedCLI(cli);
 
 			if (URLs.size() > 0) {
 				
