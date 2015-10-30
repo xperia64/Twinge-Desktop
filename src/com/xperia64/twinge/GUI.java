@@ -23,6 +23,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+/**
+ * This class is the GUI controller for Twinge.
+ */
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements ActionListener, ClipboardOwner {
 
@@ -36,24 +39,45 @@ public class GUI extends JFrame implements ActionListener, ClipboardOwner {
 
 	private Downloader downloader;
 
+	/**
+	 * It's a constructor. It does things.
+	 */
 	public GUI() {
 		getContentPane().setLayout(null);
 		setupGUI();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	/**
+	 * Adds a downloader object. The downloader handles the actual downloading...
+	 * 
+	 * @param downloader Downloader object to be added.
+	 */
 	public void addDownloader(Downloader downloader){
 		this.downloader = downloader;
 	}
 	
+	/**
+	 * Sets the output textbox to a message.
+	 * 
+	 * @param msg Message to be output.
+	 */
 	public void setOutputText(String msg){
 		out.setText(msg);
 	}
 	
+	/**
+	 * Gets the state of the checkbox for copyTo.
+	 * 
+	 * @return Is copyTo checked?
+	 */
 	public boolean copyToIsSelected(){
 		return copyTo.isSelected();
 	}
 
+	/**
+	 * This sets up the GUI... Needs to be run.
+	 */
 	void setupGUI() {
 		Font f = new Font(Font.SANS_SERIF, 3, 10);
 		command = new JLabel();
@@ -90,12 +114,20 @@ public class GUI extends JFrame implements ActionListener, ClipboardOwner {
 		setResizable(false);
 	}
 
+	/**
+	 * Adds a URL to the clipboard. Used to automatically copy the downloaded URL to the clipboard.
+	 * 
+	 * @param aString URL to be added.
+	 */
 	public void setClipboardContents(String aString) {
 		StringSelection stringSelection = new StringSelection(aString);
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		clipboard.setContents(stringSelection, this);
 	}
 
+	/**
+	 * Update logic...
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		String s = url.getText();

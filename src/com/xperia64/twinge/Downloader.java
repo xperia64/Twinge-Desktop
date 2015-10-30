@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JOptionPane;
 
+/**
+ * This class handles the logic to download URLs.
+ */
 public class Downloader {
 
 	private GUI associatedGUI;
@@ -18,20 +21,45 @@ public class Downloader {
 	final String apiTmplUrl = "https://api.twitch.tv/api/vods/%s/access_token";
 	final String usherTmplUrl = "http://usher.twitch.tv/vod/%s?nauthsig=%s&allow_source=true&nauth=%s";
 
+	/**
+	 * Adds a GUI to the downloader. NOTE: A GUI and CLI should not be added to the same downloader object!
+	 * If both have been added, the downloader will not know what to do!
+	 * 
+	 * @param associatedGUI GUI to be added.
+	 */
 	public void addAssociatedGui(GUI associatedGUI) {
 		this.associatedGUI = associatedGUI;
 	}
 
-	public void addAssociatedCli(CLI associatedCli) {
+	/**
+	 * Adds a CLI to the downloader. NOTE: A GUI and CLI should not be added to the same downloader object!
+	 * If both have been added, the downloader will not know what to do!
+	 * 
+	 * @param associatedCli CLI to be added
+	 */
+	public void addAssociatedCLI(CLI associatedCli) {
 		this.associatedCLI = associatedCli;
 	}
 
+	/**
+	 * This method converts a stream into a string.
+	 * 
+	 * @param is Stream to be converted.
+	 * @return Contents of the stream.
+	 */
 	public static String convertStreamToString(InputStream is) {
 		@SuppressWarnings("resource")
 		java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
 
+	/**
+	 * This method attempts to download from the URL provided. If it is able to,
+	 * it will prompt the user for attributes such as quality so long as the user
+	 * has not manually set those attributes.
+	 * 
+	 * @param url URL to download from.
+	 */
 	public void attemptToDownload(String url) {
 		final String apiUrl = String.format(apiTmplUrl, url);
 		Thread t = new Thread(new Runnable() {

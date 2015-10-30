@@ -3,11 +3,17 @@ package com.xperia64.twinge;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class starts the program and handles flags.
+ */
 public class Twinge {
 
 	public static boolean VERBOSE = false;
 	public static String QUALITY;
 
+	/**
+	 * This function prints the program usage in a pretty format.
+	 */
 	public static void printFlags() {
 		System.out.println("Usage:");
 		System.out.println("java -jar Twinge <arguments> <URLs>\n");
@@ -20,6 +26,9 @@ public class Twinge {
 				"is not provided, Twinge will use 'Raw' as the default.");
 	}
 
+	/**
+	 * Runs program...
+	 */
 	public static void main(String[] args) {
 
 		boolean useGUI = true;
@@ -63,7 +72,7 @@ public class Twinge {
 			Downloader downloader = new Downloader();
 
 			cli.addDownloader(downloader);
-			downloader.addAssociatedCli(cli);
+			downloader.addAssociatedCLI(cli);
 
 			if (URLs.size() > 0) {
 				
