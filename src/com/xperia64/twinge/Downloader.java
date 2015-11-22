@@ -86,6 +86,7 @@ public class Downloader {
 							System.err
 									.println("[Twinge-Downloader] This does not appear to be a valid twitch video system VOD URL/ID...");
 						}
+						return;
 					}
 					input = connection.getInputStream();
 				} catch (IOException e) {
@@ -106,6 +107,7 @@ public class Downloader {
 						System.err
 								.println("[Twinge-Downloader] Bad twitch API result (Is this a valid video ID?)\n");
 					}
+					return;
 				}
 
 				if (Twinge.VERBOSE) {
@@ -140,6 +142,7 @@ public class Downloader {
 							System.err
 									.println("[Twinge-Downloader] Bad VOD connection!\n");
 						}
+						return;
 					}
 					input = connection.getInputStream();
 				} catch (IOException e) {
@@ -162,6 +165,7 @@ public class Downloader {
 						System.err
 								.println("[Twinge-Downloader] Bad twitch VOD result!\n");
 					}
+					return;
 				}
 				String[] lines = resolute.split("\n");
 				final ArrayList<String> qualities = new ArrayList<String>();
@@ -236,6 +240,7 @@ public class Downloader {
 					} else {
 						associatedCLI.setURL("Failed");
 					}
+					return;
 				}
 
 			}
