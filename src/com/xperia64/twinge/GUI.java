@@ -8,14 +8,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -29,8 +22,6 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements ActionListener, ClipboardOwner {
 
-	final String regex1 = "^(http://|)([w]{3}\\.|)(twitch.tv/).*(/v/)\\d{7,8}$";
-	final String regex2 = "^\\d{7,8}$";
 	private JButton load;
 	private JTextField url;
 	private JCheckBox copyTo;
@@ -131,9 +122,9 @@ public class GUI extends JFrame implements ActionListener, ClipboardOwner {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		String s = url.getText();
-		if (s.toLowerCase().matches(regex1))
+		if (s.toLowerCase().matches(Globals.urlRegex))
 			downloader.attemptToDownload(s.substring(s.lastIndexOf('/') + 1));
-		else if (s.matches(regex2))
+		else if (s.matches(Globals.idRegex))
 			downloader.attemptToDownload(s);
 		else
 			JOptionPane.showMessageDialog(this,"This doesn't look like a new twitch video system VOD URL/ID");

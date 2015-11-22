@@ -1,17 +1,11 @@
 package com.xperia64.twinge;
 
-import java.io.BufferedReader;
 import java.util.Scanner;
-
-import javax.swing.JOptionPane;
 
 /**
  * A class for Command Line operations. This handles basic command line logic.
  */
 public class CLI implements Runnable {
-
-	final String regex1 = "^(http://|)([w]{3}\\.|)(twitch.tv/).*(/v/)\\d{7,8}$";
-	final String regex2 = "^\\d{7,8}$";
 
 	private String URL;
 	private Downloader downloader;
@@ -74,10 +68,10 @@ public class CLI implements Runnable {
 	 * @param url URL to attempt downloading from.
 	 */
 	public void downloadFrom(String url) {
-		if (url.toLowerCase().matches(regex1)) {
+		if (url.toLowerCase().matches(Globals.urlRegex)) {
 			downloader
 					.attemptToDownload(url.substring(url.lastIndexOf('/') + 1));
-		} else if (url.matches(regex2)) {
+		} else if (url.matches(Globals.idRegex)) {
 			downloader.attemptToDownload(url);
 		} else {
 			System.out
@@ -94,10 +88,10 @@ public class CLI implements Runnable {
 	 * @param space Add spaces between lines.
 	 */
 	public void downloadFrom(String url, boolean space) {
-		if (url.toLowerCase().matches(regex1)) {
+		if (url.toLowerCase().matches(Globals.urlRegex)) {
 			downloader
 					.attemptToDownload(url.substring(url.lastIndexOf('/') + 1));
-		} else if (url.matches(regex2)) {
+		} else if (url.matches(Globals.idRegex)) {
 			downloader.attemptToDownload(url);
 		} else {
 			System.out
