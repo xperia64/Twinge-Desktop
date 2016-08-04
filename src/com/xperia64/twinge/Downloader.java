@@ -17,7 +17,7 @@ public class Downloader {
 
 	private GUI associatedGUI;
 	private CLI associatedCLI;
-	final String regex = "^(http://).*(/v1/AUTH_system).*(m3u8)$";
+	final String regex = "^(http://).*(m3u8)$";
 	final String apiTmplUrl = "https://api.twitch.tv/api/vods/%s/access_token";
 	final String usherTmplUrl = "https://usher.ttvnw.net/vod/%s.m3u8?nauthsig=%s&allow_source=true&nauth=%s";
 
