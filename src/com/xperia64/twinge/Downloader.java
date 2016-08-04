@@ -19,7 +19,7 @@ public class Downloader {
 	private CLI associatedCLI;
 	final String regex = "^(http://).*(/v1/AUTH_system).*(m3u8)$";
 	final String apiTmplUrl = "https://api.twitch.tv/api/vods/%s/access_token";
-	final String usherTmplUrl = "http://usher.twitch.tv/vod/%s?nauthsig=%s&allow_source=true&nauth=%s";
+	final String usherTmplUrl = "https://usher.ttvnw.net/vod/%s.m3u8?nauthsig=%s&allow_source=true&nauth=%s";
 
 	/**
 	 * Adds a GUI to the downloader. NOTE: A GUI and CLI should not be added to the same downloader object!
@@ -96,30 +96,26 @@ public class Downloader {
 				String result = convertStreamToString(input);
 				if (result == null
 						|| result.isEmpty()
-						|| !((result.length() == 183 || result.length() == 184)
-								&& result.startsWith("{\"token\":\"{") && (result
+						|| !(result.startsWith("{\"token\":\"{") && (result
 									.endsWith("\"}")))) {
 					if (associatedGUI != null) {
 						JOptionPane
 								.showMessageDialog(associatedGUI,
-										"Bad twitch API result (Is this a valid video ID?)");
+										"Bad twitch API result (Is this a valid video ID?) "+result);
 					} else {
 						System.err
-								.println("[Twinge-Downloader] Bad twitch API result (Is this a valid video ID?)\n");
+								.println("[Twinge-Downloader] Bad twitch API result (Is this a valid video ID?)\n"+result);
 					}
 					return;
 				}
 
 				if (Twinge.VERBOSE) {
 					System.out.println("[Twinge-Downloader] Result: " + result);
-				}
-				String token = result.substring(10,
-						result.length() == 184 ? 133 : 132);
+				}	
+				String token = result.substring(result.indexOf("\"token\"")+9, result.indexOf("\",\"sig\""));	
 				token = token.replace("\\", "");
-				String tokenSig = result.substring(result.length() == 184 ? 142
-						: 141, result.length() == 184 ? 182 : 181);
-				String vodId = result.substring(39, result.length() == 184 ? 47
-						: 46);
+				String tokenSig = result.substring(result.indexOf("\"sig\":")+7,result.lastIndexOf("\"}")); //result.substring();
+				String vodId = result.substring(result.indexOf("\\\"vod_id\\\":")+11, result.indexOf(",",result.indexOf("\\\"vod_id\\\":"))); //result.substring();
 				String usherUrl = String.format(usherTmplUrl, vodId, tokenSig,
 						token);
 				url = null;
@@ -130,9 +126,9 @@ public class Downloader {
 					e.printStackTrace();
 				}
 
-				HttpURLConnection connection;
+				HttpsURLConnection connection;
 				try {
-					connection = (HttpURLConnection) url.openConnection();
+					connection = (HttpsURLConnection) url.openConnection();
 					connection.connect();
 					if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) {
 						if (associatedGUI != null) {
